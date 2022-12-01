@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\SuperAdmin\AdminController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\User\NoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +25,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [ AuthController::class, 'login']);
 Route::post('/register', [ AuthController::class, 'register']);
-Route::middleware(
-    'auth:sanctum')->group(function () {
-        Route::get('me', [AuthController::class, 'me']);
-    });
+
+Route::prefix('super_admin')->middleware(['auth:sanctum', 'isSuperAdmin'])->group(function () {
+    Route::post('add_admin', [AdminController::class, 'create']);
+});
+
+Route::prefix('admin')->middleware(['auth:sanctum', 'isAdmin'])->group(function () {
+    Route::get('users', [UserController::class, 'list']);
+});
+
+Route::prefix('notes')->middleware(['auth:sanctum', 'isUser'])->group(function () {
+
+    Route::get('list', [NoteController::class, 'index']);
+    Route::post('add', [NoteController::class, 'create']);
+
+});
+
+
+Route::prefix('profile')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('me', [ProfileController::class, 'index']);
+});

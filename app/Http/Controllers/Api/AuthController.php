@@ -17,7 +17,7 @@ class AuthController extends Controller
          $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users|max:255',
-            'password' => 'required|min:10',
+            'password' => 'required|min:8',
         ]);
         // Return errors if validation error occur.
         if ($validator->fails()) {
@@ -28,7 +28,6 @@ class AuthController extends Controller
         // Check if validation pass then create user and auth token. Return the auth token
         if ($validator->passes()) {
             $role = Role::where('name', 'USER')->first();
-            $roleId = 0;
 
             if(!$role){
                 $role = Role::create([
@@ -66,7 +65,4 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me(Request $request){
-        return $request->user();
-    }
 }
