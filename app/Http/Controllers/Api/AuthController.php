@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,9 +27,20 @@ class AuthController extends Controller
         }
         // Check if validation pass then create user and auth token. Return the auth token
         if ($validator->passes()) {
+            $role = Role::where('name', 'USER')->first();
+            $roleId = 0;
+
+            if(!$role){
+                $role = Role::create([
+                    'name' => 'USER',
+                    'is_editable' => false
+                ]);
+            }
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'role_id' => $role->id,
                 'password' => Hash::make($request->password)
             ]);
             $token = $user->createToken('auth_token')->plainTextToken;
