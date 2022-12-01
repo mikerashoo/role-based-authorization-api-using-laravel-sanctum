@@ -1,7 +1,7 @@
-# Role based authorizationn using laravel sanctum 
+# Token based authorization using laravel sanctum 
 This repo is starting boilerplate for api authentication and role based authorization for laravel sanctum  api
 
-## Inistallation guide 
+## Installation guide 
 1. Clone the project using git clone   
 2. Copy a fresh .local.env file and rename it .env  
 3. Update database information by opening .env file.       
